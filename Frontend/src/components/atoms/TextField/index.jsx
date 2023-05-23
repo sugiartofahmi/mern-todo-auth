@@ -1,9 +1,14 @@
-const TextField = ({ label, type }) => {
+const TextField = ({ label, type, onChange, value }) => {
   return (
     <div className="flex flex-col gap-y-3 ">
-      <label htmlFor={label}>{label}</label>
+      <label className="capitalize" htmlFor={label}>
+        {label}
+      </label>
       <input
-        className="text-black p-2 focus:outline-none rounded capitalize "
+        onChange={onChange}
+        value={value}
+        name={label}
+        className="text-black p-2 focus:outline-none rounded  "
         type={type}
       />
     </div>
