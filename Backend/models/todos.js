@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 
 const TodoSchema = new mongoose.Schema({
-  title: {
+  todo: {
     type: String,
     trim: true,
-    required: [true, "Please add a course title"],
+    required: [true, "Please add  title"],
+  },
+  priority: {
+    type: Number,
+    trim: true,
+    required: [true],
   },
   user: {
     type: mongoose.Schema.ObjectId,
