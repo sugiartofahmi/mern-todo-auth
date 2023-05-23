@@ -2,7 +2,7 @@ import Todos from "../models/todos.js";
 
 export const getTodos = async (req, res) => {
   try {
-    const todos = await Todos.find({ user: req.body.id }).sort({ date: -1 });
+    const todos = await Todos.find({ user: req.body.user }).sort({ date: -1 });
     res.status(200).json({
       message: "success",
       data: todos,
