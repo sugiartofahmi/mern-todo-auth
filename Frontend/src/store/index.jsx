@@ -1,11 +1,7 @@
-import { selector, atom } from "recoil";
+import { atom } from "recoil";
+import TokenService from "@/services/token.js";
 
-export const numberState = atom({
-  key: "number-state",
-  default: 1,
-});
-
-export const counterState = selector({
-  key: "counter-state",
-  get: ({ get }) => {},
+export const userState = atom({
+  key: "user-state",
+  default: TokenService.getUserData(),
 });

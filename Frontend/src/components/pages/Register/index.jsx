@@ -39,7 +39,7 @@ const Register = () => {
 
   return (
     <AuthLayout>
-      <form className="flex flex-col  bg-[#161A23] w-[80vh] h-[70vh] rounded-lg p-5 justify-between items-center">
+      <div className="flex flex-col  bg-[#161A23] w-[80vh] h-[70vh] rounded-lg p-5 justify-between items-center">
         <div className="flex flex-col gap-y-5 w-full ">
           <div className="flex w-full justify-between ">
             <h1 className="text-2xl font-semibold  ">Register</h1>
@@ -69,7 +69,6 @@ const Register = () => {
             text="Submit"
             className="bg-blue-500 w-[100px] rounded p-2 "
           />
-          <ToastContainer />
 
           <h1>
             Already have an account?
@@ -78,7 +77,8 @@ const Register = () => {
             </Link>
           </h1>
         </div>
-      </form>
+      </div>
+      <ToastContainer />
     </AuthLayout>
   );
 };
