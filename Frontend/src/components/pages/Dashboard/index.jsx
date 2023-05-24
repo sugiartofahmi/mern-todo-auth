@@ -28,17 +28,21 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:9000/todos/${id}`, {
-      headers: {
-        Authorization: TokenService.getToken(),
-      },
-    });
+    await axios.delete(`http://localhost:9000/todos/${id}`, config);
+    getTodos();
+  };
+
+  const handleChangeStatus = async (id, status) => {
+    const data = {
+      status: status,
+    };
+
+    await axios.put(`http://localhost:9000/todos/${id}`, data, config);
     getTodos();
   };
 
   useEffect(() => {
     getTodos();
-    console.log(todos);
   }, [modalAdd]);
 
   return (
@@ -93,7 +97,9 @@ const Dashboard = () => {
                         <Button onClick={() => setModalEdit(!modalEdit)}>
                           <BiPencil size={20} />
                         </Button>
-                        <Button>
+                        <Button
+                          onClick={() => handleChangeStatus(el._id, "progress")}
+                        >
                           <AiOutlineCheckCircle size={24} />
                         </Button>
                       </div>
@@ -144,10 +150,16 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="flex flex-end items-center gap-x-2">
-                        <Button>
+                        <Button
+                          onClick={() => handleChangeStatus(el._id, "todo")}
+                        >
                           <MdOutlineCancel size={24} />
                         </Button>
-                        <Button>
+                        <Button
+                          onClick={() =>
+                            handleChangeStatus(el._id, "completed")
+                          }
+                        >
                           <AiOutlineCheckCircle size={24} />
                         </Button>
                       </div>
@@ -198,10 +210,12 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="flex flex-end items-center gap-x-2">
-                        <Button>
+                        <Button onClick={() => handleDelete(el._id)}>
                           <BsTrash size={20} />
                         </Button>
-                        <Button>
+                        <Button
+                          onClick={() => handleChangeStatus(el._id, "progress")}
+                        >
                           <MdOutlineCancel size={24} />
                         </Button>
                       </div>

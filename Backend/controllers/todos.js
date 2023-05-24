@@ -3,7 +3,7 @@ import Todos from "../models/todos.js";
 export const getTodos = async (req, res) => {
   try {
     const todos = await Todos.find({ user: req.header("user") }).sort({
-      date: -1,
+      priority: 1,
     });
     res.status(200).json({
       message: "success",
@@ -65,6 +65,7 @@ export const deleteTodo = async (req, res) => {
 export const updateTodo = async (req, res) => {
   try {
     let todo = await Todos.findById(req.params.id);
+    console.log(todo);
     if (!todo) {
       return res.status(404).json({ message: "Not found " });
     }

@@ -28,6 +28,7 @@ const AddTodo = ({ onClick }) => {
       setTodo({
         todo: "",
         priority: 1,
+        user: TokenService.getUserData().id,
       });
     } catch (error) {
       console.log(error);
