@@ -1,15 +1,12 @@
 import AddTodo from "@/components/modules/AddTodo";
-import { useRecoilValue } from "recoil";
-import { userState } from "@/store";
 import TokenService from "@/services/token.js";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { modalAddTodo } from "../../../store";
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = useRecoilValue(userState);
+  const user = TokenService.getUserData();
   const [modal, setModal] = useRecoilState(modalAddTodo);
-
   const handleLogout = () => {
     TokenService.removeToken();
     TokenService.removeUserData();
