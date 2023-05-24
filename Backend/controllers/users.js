@@ -3,14 +3,15 @@ import Users from "../models/users.js";
 export const register = async (req, res) => {
   try {
     const user = await Users.create(req.body);
-    const token = user.getSignedJwtToken();
     res.status(200).json({
       message: "success",
       user,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server Error");
+    res.status(500).json({
+      message: "failed",
+    });
   }
 };
 
@@ -43,8 +44,10 @@ export const login = async (req, res, next) => {
     res.status(200).json({
       message: "success",
       token,
-      user: user.name,
-      id: user.id,
+      user: {
+        name: user.name,
+        id: user.id,
+      },
     });
   } catch (error) {
     console.error(error);
