@@ -5,262 +5,209 @@ import { MdOutlineCancel } from "react-icons/md";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import Button from "@/components/atoms/Button";
 import EditTodo from "../../modules/EditTodo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import TokenService from "@/services/token";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { modalAddTodo, modalEditTodo, userState } from "@/store";
 const Dashboard = () => {
-  const [modal, setModal] = useState(false);
+  const modalAdd = useRecoilValue(modalAddTodo);
+  const user = useRecoilValue(userState);
+  const [modalEdit, setModalEdit] = useRecoilState(modalEditTodo);
+  const [todos, setTodos] = useState([]);
+  const config = {
+    headers: {
+      Authorization: TokenService.getToken(),
+      user: user.id,
+    },
+  };
+
+  const getTodos = async () => {
+    const res = await axios.get("http://localhost:9000/todos", config);
+    setTodos(res.data.data);
+  };
+
+  const handleDelete = async (id) => {
+    await axios.delete(`http://localhost:9000/todos/${id}`, {
+      headers: {
+        Authorization: TokenService.getToken(),
+      },
+    });
+    getTodos();
+  };
+
+  useEffect(() => {
+    getTodos();
+    console.log(todos);
+  }, [modalAdd]);
 
   return (
     <MainLayout>
-      {modal && <EditTodo onClick={() => setModal(!modal)} />}
+      {modalEdit && <EditTodo onClick={() => setModalEdit(!modalEdit)} />}
       <section className="flex flex-row gap-x-5 items-center w-full min-h-[88vh] text-base  px-[10vh] text-black">
         <div className="flex flex-col w-[400px] border-[1px] border-gray-200 rounded-lg items-center h-[530px] pt-3 gap-y-5">
           <h1 className="text-lg font-semibold text-white">Todo</h1>
           <div className="flex flex-col w-full h-full overflow-auto px-3 pb-3 gap-y-2">
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-red-600">High</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button onClick={() => setModal(!modal)}>
-                  <BiPencil size={20} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-red-600">High</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button>
-                  <BiPencil size={20} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-red-600">High</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button>
-                  <BiPencil size={20} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-yellow-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-yellow-600">Medium</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button>
-                  <BiPencil size={20} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-green-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-green-600">Low</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button>
-                  <BiPencil size={20} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
+            {todos.length > 0 &&
+              todos.map(
+                (el, i) =>
+                  el.status == "todo" && (
+                    <div
+                      key={i}
+                      className={`flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200 ${
+                        el.priority == 1
+                          ? "bg-red-200"
+                          : el.priority == 2
+                          ? "bg-yellow-200"
+                          : el.priority == 3 && "bg-green-200"
+                      } `}
+                    >
+                      <div className="flex w-full justify-between ">
+                        <div className="flex  w-3/4 ">
+                          <h1 className=" capitalize text-justify w-full tracking-tighter ">
+                            {el.todo}
+                          </h1>
+                        </div>
+                        <div className="w-1/4 flex justify-end items-start  ">
+                          <h1
+                            className={`${
+                              el.priority == 1
+                                ? "text-red-600"
+                                : el.priority == 2
+                                ? "text-yellow-600"
+                                : el.priority == 3 && "text-green-600"
+                            }`}
+                          >
+                            {el.priority == 1
+                              ? "High"
+                              : el.priority == 2
+                              ? "Medium"
+                              : el.priority == 3 && "Low"}
+                          </h1>
+                        </div>
+                      </div>
+                      <div className="flex flex-end items-center gap-x-2">
+                        <Button onClick={() => handleDelete(el._id)}>
+                          <BsTrash size={20} />
+                        </Button>
+                        <Button onClick={() => setModalEdit(!modalEdit)}>
+                          <BiPencil size={20} />
+                        </Button>
+                        <Button>
+                          <AiOutlineCheckCircle size={24} />
+                        </Button>
+                      </div>
+                    </div>
+                  )
+              )}
           </div>
         </div>
         <div className="flex flex-col w-[400px] border-[1px] border-gray-200 rounded-lg items-center h-[530px] pt-3 gap-y-5">
           <h1 className="text-lg font-semibold text-white">On Progress</h1>
           <div className="flex flex-col w-full h-full overflow-auto px-3 pb-3 gap-y-2">
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200  ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-red-600">High</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <MdOutlineCancel size={24} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-yellow-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-yellow-600">Medium</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <MdOutlineCancel size={24} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-green-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-green-600">Low</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <MdOutlineCancel size={24} />
-                </Button>
-                <Button>
-                  <AiOutlineCheckCircle size={24} />
-                </Button>
-              </div>
-            </div>
+            {todos.length > 0 &&
+              todos.map(
+                (el, i) =>
+                  el.status == "progress" && (
+                    <div
+                      key={i}
+                      className={`flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200 ${
+                        el.priority == 1
+                          ? "bg-red-200"
+                          : el.priority == 2
+                          ? "bg-yellow-200"
+                          : el.priority == 3 && "bg-green-200"
+                      } `}
+                    >
+                      <div className="flex w-full justify-between ">
+                        <div className="flex  w-3/4 ">
+                          <h1 className=" capitalize text-justify w-full tracking-tighter ">
+                            {el.todo}
+                          </h1>
+                        </div>
+                        <div className="w-1/4 flex justify-end items-start  ">
+                          <h1
+                            className={`${
+                              el.priority == 1
+                                ? "text-red-600"
+                                : el.priority == 2
+                                ? "text-yellow-600"
+                                : el.priority == 3 && "text-green-600"
+                            }`}
+                          >
+                            {el.priority == 1
+                              ? "High"
+                              : el.priority == 2
+                              ? "Medium"
+                              : el.priority == 3 && "Low"}
+                          </h1>
+                        </div>
+                      </div>
+                      <div className="flex flex-end items-center gap-x-2">
+                        <Button>
+                          <MdOutlineCancel size={24} />
+                        </Button>
+                        <Button>
+                          <AiOutlineCheckCircle size={24} />
+                        </Button>
+                      </div>
+                    </div>
+                  )
+              )}
           </div>
         </div>
         <div className="flex flex-col w-[400px] border-[1px] border-gray-200 rounded-lg items-center h-[530px] pt-3 gap-y-5">
           <h1 className="text-lg font-semibold text-white">Completed</h1>
           <div className="flex flex-col w-full h-full overflow-auto px-3 pb-3 gap-y-2">
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-red-600">High</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button>
-                  <MdOutlineCancel size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-yellow-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-yellow-600">Medium</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button>
-                  <MdOutlineCancel size={24} />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-green-200 ">
-              <div className="flex w-full justify-between ">
-                <div className="flex  w-3/4 ">
-                  <h1 className=" capitalize text-justify w-full tracking-tighter ">
-                    learn react redux
-                  </h1>
-                </div>
-                <div className="w-1/4 flex justify-end items-start  ">
-                  <button className=" text-green-600">Low</button>
-                </div>
-              </div>
-              <div className="flex flex-end items-center gap-x-2">
-                <Button>
-                  <BsTrash size={20} />
-                </Button>
-                <Button>
-                  <MdOutlineCancel size={24} />
-                </Button>
-              </div>
-            </div>
+            {todos.length > 0 &&
+              todos.map(
+                (el, i) =>
+                  el.status == "completed" && (
+                    <div
+                      key={i}
+                      className={`flex flex-col w-full items-end  rounded gap-y-5 drop-shadow-lg p-3 bg-red-200 ${
+                        el.priority == 1
+                          ? "bg-red-200"
+                          : el.priority == 2
+                          ? "bg-yellow-200"
+                          : el.priority == 3 && "bg-green-200"
+                      } `}
+                    >
+                      <div className="flex w-full justify-between ">
+                        <div className="flex  w-3/4 ">
+                          <h1 className=" capitalize text-justify w-full tracking-tighter ">
+                            {el.todo}
+                          </h1>
+                        </div>
+                        <div className="w-1/4 flex justify-end items-start  ">
+                          <h1
+                            className={`${
+                              el.priority == 1
+                                ? "text-red-600"
+                                : el.priority == 2
+                                ? "text-yellow-600"
+                                : el.priority == 3 && "text-green-600"
+                            }`}
+                          >
+                            {el.priority == 1
+                              ? "High"
+                              : el.priority == 2
+                              ? "Medium"
+                              : el.priority == 3 && "Low"}
+                          </h1>
+                        </div>
+                      </div>
+                      <div className="flex flex-end items-center gap-x-2">
+                        <Button>
+                          <BsTrash size={20} />
+                        </Button>
+                        <Button>
+                          <MdOutlineCancel size={24} />
+                        </Button>
+                      </div>
+                    </div>
+                  )
+              )}
           </div>
         </div>
       </section>

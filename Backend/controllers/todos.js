@@ -2,7 +2,9 @@ import Todos from "../models/todos.js";
 
 export const getTodos = async (req, res) => {
   try {
-    const todos = await Todos.find({ user: req.body.user }).sort({ date: -1 });
+    const todos = await Todos.find({ user: req.header("user") }).sort({
+      date: -1,
+    });
     res.status(200).json({
       message: "success",
       data: todos,
@@ -29,6 +31,7 @@ export const createTodo = async (req, res) => {
 export const getTodo = async (req, res) => {
   try {
     const todo = await Todos.findById(req.params.id);
+
     if (!todo) {
       return res.status(404).json({ message: "Not found " });
     }
@@ -44,11 +47,11 @@ export const getTodo = async (req, res) => {
 
 export const deleteTodo = async (req, res) => {
   try {
-    const todo = await Todos.findById(req.params.id);
+    const todo = await Todos.findByIdAndRemove(req.params.id);
+    console.log(todo);
     if (!todo) {
       return res.status(404).json({ message: "Not found " });
     }
-    todo.remove();
     res.status(200).json({
       message: "success",
       data: {},

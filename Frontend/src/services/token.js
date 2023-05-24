@@ -1,10 +1,9 @@
 const TOKEN_KEY = "access_token";
-const REFRESH_TOKEN_KEY = "refresh_token";
 const USER = "user_data";
 
 const TokenService = {
   getToken() {
-    return JSON.parse(localStorage.getItem(TOKEN_KEY));
+    return localStorage.getItem(TOKEN_KEY);
   },
 
   getUserData() {
