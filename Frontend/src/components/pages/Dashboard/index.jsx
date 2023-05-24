@@ -22,6 +22,8 @@ const Dashboard = () => {
     },
   };
 
+  const [id, setId] = useState("");
+
   const getTodos = async () => {
     const res = await axios.get("http://localhost:9000/todos", config);
     setTodos(res.data.data);
@@ -36,18 +38,24 @@ const Dashboard = () => {
     const data = {
       status: status,
     };
-
     await axios.put(`http://localhost:9000/todos/${id}`, data, config);
     getTodos();
   };
 
+  const handleGetId = (id) => {
+    setId(id);
+    setModalEdit(!modalEdit);
+  };
+
   useEffect(() => {
     getTodos();
-  }, [modalAdd]);
+  }, [modalAdd, modalEdit]);
 
   return (
     <MainLayout>
-      {modalEdit && <EditTodo onClick={() => setModalEdit(!modalEdit)} />}
+      {modalEdit && (
+        <EditTodo id={id} onClick={() => setModalEdit(!modalEdit)} />
+      )}
       <section className="flex flex-row gap-x-5 items-center w-full min-h-[88vh] text-base  px-[10vh] text-black">
         <div className="flex flex-col w-[400px] border-[1px] border-gray-200 rounded-lg items-center h-[530px] pt-3 gap-y-5">
           <h1 className="text-lg font-semibold text-white">Todo</h1>
@@ -94,7 +102,7 @@ const Dashboard = () => {
                         <Button onClick={() => handleDelete(el._id)}>
                           <BsTrash size={20} />
                         </Button>
-                        <Button onClick={() => setModalEdit(!modalEdit)}>
+                        <Button onClick={() => handleGetId(el._id)}>
                           <BiPencil size={20} />
                         </Button>
                         <Button
